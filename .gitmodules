@@ -1,0 +1,6 @@
+[submodule "themes/papercss-hugo-theme"]
+	path = themes/papercss-hugo-theme
+	url = https://github.com/zwbetz-gh/papercss-hugo-theme.git
+[submodule "public"]
+	path = public
+	url = https://github.com/lm0xfffe/lm0xfffe.github.io.git
