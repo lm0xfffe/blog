@@ -293,3 +293,8 @@ step-form可选，此时var每次循环不会变化，除非再循环体中被�
 符号across，and,below,collecting,counting,finally,for,from,summing,then,to等都是循环关键字。
 
 ** 如何自定义宏
+
+*** 宏展开期和运行期
+
+当编写宏时，你是在编写生成代码的代码。
+
