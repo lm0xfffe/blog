@@ -1,6 +1,105 @@
-#+title: "My First Post"
-#+date: 2020-12-10T17:57:31+08:00
+#+title: "Common Lisp"
+#+date: 2020-12-14T10:57:31+08:00
 #+draft: false
 
-* test
+* 安装
+
+sudo pacman -S sbcl
+
+* 将文件内函数发送到Lisp进行求值并编译
+
+在DEFUN定义内部的任意位置或者刚好在其后面时，输入C-c C-c, 这将启动slime-compile-defun命令.
+
+然后C-c C-z或者C-x b切换到repl进行调用。
+
+如果出错将启动调试器，输入q退出调试器。
+
+如果一个文件中有大量的定义时，加载整个文件更加便利：
++ (load "hello.lisp")
++ 或者先编译后加载：（load (compile "hello.lisp")）
++ 不使用REPL,在源文件中加载：C-c C-l调用命令slime-load-file加载文件；
+  + 或者C-c C-k 编译并加载当前缓冲区所关联的文件
+
+* 全局变量：defvar 和 星号 
+
+(defvar **db** nil)
+push宏添加项： (defun add-record (cd) (push cd **db**))
+
+* 关键字形参
+
+(defun foo (&key a b c ))
+(foo :c 1 :a 2 b:66)
+
+默认值
+(defun foo (&key a (b 20) (c 30 c-p)))
+(foo) => (NIL 20 30 NIL) ;;其中c-p表示c变量是否是传入，还是使用的默认值
+
+* 常量名：以+开始和结尾
+
+* 原子
+
+原子可以被分为两个类别：符号和所有其他内容。
+符号就是变量名。所有其他内容包括数字和字符串，都是自求值对象。
+
+符号也可能是自求值--它们所命名的变量可以被赋值成符号本身的值，比如常量T和NIL，即所谓的真值和假值。
+另一类自求值是*关键字*符号--以名字冒号开始的符号。会自动定义个以此命名的常值变量并以该符号作为其值。
+
+* 函数
+
+* 特殊表达式
+
+* 宏
+
+一个以S-表达式为其参数的函数，并返回一个LISP形式，然后对其求值并用该值取代宏形式。
+求值分为两个阶段：
+1. 宏形式的元素不经求值即被传递到宏函数中；
+2. 由宏函数返回的形式（展开式）按照正常的求值规则进行求值。
+COMPILE-FILE编译时展开，LOAD加载时进行执行求值。
+
+* 真，假和等价
+
+符号NIL是唯一的假值；其他都是真值。
+符号T是标准的真值。
+NIL是唯一一个即是原子又是列表的对象。可用来表示空列表。
+
+等价：
++ =用来比较数字；
++ CHAR=比较字符串，以此类推；
+
+四个通用等价谓词：
++ EQ：测试对象标识；不要用于比较数字和字符串；
++ EQL：类似EQ，可用来比较数字和字符串；
++ EQUAL：如果两个对象值或者结构内容都相同，则视为等价；
++ EQUALP：同EQUAL，更宽松，忽略大小写。1,1.0是等价的。
+
+* 函数 
+
+定义：
+#+BEGIN_SRC LISP
+(defun name (parameter*)
+  "OPTION documentation string."
+  body-form*)
+#+END_SRC
+
+** 可选形参
+
+在必要形参的名字之后放置符号&optional，这个符号后面的都属于可选的形参。
+
+*** 默认值
+
++ 简单的提供一个值：(defun foo (a &optional (b *10*)) (list a b))
++ 通过其他参数来赋值：(defun foo (a &option (b *a*)) (list a b))
+
+**** 判断是否使用了默认值
+
+在默认值表达式之后添加一个变量名，如果使用了默认值，则此变量值为T，否则为NIL；
+此变量名命名规则：真实形参名-supplied-p
+(defun foo (a b &optional (c 3 c-supplied-p)) (list a b c c-supplied-p))
+
+** 剩余形参(可变数量的参数)
+
+(defun format (stream string &rest values) ...)
+(defun + (&rest numbers) ... )
+符号&rest。
+
 
