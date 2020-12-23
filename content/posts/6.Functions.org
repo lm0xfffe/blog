@@ -1,0 +1,50 @@
+#+title: "6.Functions"
+#+:date: 2020-12-21T11:23:20+08:00
+#+:draft: true
+
+* 函数
+
+** 全局函数
+
+谓词：fboundp判断一个符号是否是函数。
+symbol-function：如果一个符号是函数，则返回它。
+
+可通过 symbol-function 给函数配置某个名字：
+(setf (symbol-function 'add2)
+  #'(lambda (x) (+ x 2)))
+
+定义一个函数使用defun
+要取得函数的文档字符串，可以通过调用 documentation 
+
+** 局部函数
+
+通过defun或symbol-function搭配setf定义的函数是全局函数。
+
+局部函数使用labels来定义，类似let。第一个实参是一个新局部函数的定义列表，而不是一个变量规格说明的列表。列表中的元素为如下形式：
+
+(name parameters . body)
+
+> (labels ((add10 (x) (+ x 10))
+           (consa  (x) (cons 'a x)))
+    (consa (add10 3)))
+==> (A . 13)
+
+
+** 参数列表
+
+*** 不定参数
+
+如果我们在函数的形参列表里的最后一个变量前，插入 &rest 符号，那么当这个函数被调用时，这个变量会被设成一个带有剩余参数的列表。
+(defun our-funcall (fn &rest args)
+  (apply fn args))
+
+*** 选择性参数
+
+如果符号 &optional 出现在一个函数的形参列表时，那么在 &optional 之后的参数都是选择性的，缺省为 nil ;也可以明确制定缺省值。
+(defun philosoph (thing &optional (property 'fun))
+  (list thing 'is property))
+
+*** 关键字参数
+
+如果你把符号 &key 放在一个形参列表，那在 &key 之后的形参都是选择性的。和普通的选择性参数一样，关键字参数缺省值为 nil ，但可以在形参列表中明确地指定缺省值。
+

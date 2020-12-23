@@ -1,0 +1,6 @@
+# Version control and locks.
+*.orig
+*.swp
+*~
+.#*
+\#*\#
